@@ -4,57 +4,120 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- CHANGE THIS. It is the name on the browser tab, and it is what Google shows. -->
-  <title>Sullivan Cliburn — I want to make cool video games</title>
-
-  <!-- CHANGE THIS TOO. One sentence. It is what shows under your link when someone shares it. -->
-  <meta name="description" content="One sentence about who you are and what you make.">
-
+  <meta name="description"
+    content="Sullivan Cliburn is a game-focused creative developer building playful digital worlds.">
+  <title>Sullivan Cliburn — Creative Developer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
 
-  <header>
-    <!-- Exactly ONE h1 on the page. It is your name. -->
-    <h1>Your Name - Sullivan Cliburn</h1>
-    <p class="tagline">One line: what you do, and who it is for.</p>
+  <header class="site-header shell">
+    <a class="wordmark" href="#top" aria-label="Sullivan Cliburn home"><span>SC</span> / 26</a>
+    <nav aria-label="Main navigation">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a class="status-pill" href="#contact"><i></i> Available for cool projects</a>
   </header>
 
-  <main>
+  <main id="top" class="shell">
+    <section class="hero-grid" aria-labelledby="intro-title">
+      <div class="hero-copy reveal">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> Creative developer / game maker</p>
+        <h1 id="intro-title">I make<br><em>playful</em><br>digital worlds<span class="accent-mark">.</span></h1>
+        <p class="hero-description">Hi, I’m Sullivan. I’m learning how to turn curious ideas into interactive
+          experiences that feel a little unexpected.</p>
+        <a class="button button-primary" href="#work">Explore my work <span aria-hidden="true">↘</span></a>
+      </div>
 
-    <section>
-      <h2>What I am working on</h2>
-      <ul>
-        <li><strong>Something real.</strong> What it is, in one line.</li>
-        <li><strong>Something else.</strong> Keep it concrete — a thing you made, not a skill you have.</li>
-      </ul>
+      <div class="hero-orbit glass-card reveal" data-tilt>
+        <div class="orbit-label">Currently exploring <span>↗</span></div>
+        <div class="orbit-stage" aria-label="A stylized illustration of a glowing game world">
+          <div class="planet"><span></span></div>
+          <div class="orbit-ring ring-one"></div>
+          <div class="orbit-ring ring-two"></div>
+          <span class="star star-one">✦</span>
+          <span class="star star-two">·</span>
+          <span class="star star-three">✦</span>
+        </div>
+        <div class="orbit-footer"><span>ideas →</span><strong>in motion</strong></div>
+      </div>
     </section>
 
-    <section>
-      <h2>What I am learning</h2>
-      <p>
-        Two or three sentences. Name the actual tools. "I am learning networking and how data
-        centers stay online" beats "I am passionate about technology."
-      </p>
+    <section id="work" class="bento-grid" aria-label="Selected work">
+      <article class="glass-card project-card project-main reveal" data-tilt>
+        <div class="card-top"><span class="number">01</span><span class="card-tag">In progress</span></div>
+        <div class="pixel-scene" aria-hidden="true"><span class="pixel-sun"></span><span
+            class="pixel-mountain mountain-back"></span><span class="pixel-mountain mountain-front"></span><span
+            class="pixel-player"></span></div>
+        <div class="card-content">
+          <p class="label">Game design / Python</p>
+          <h2>The Vault</h2>
+          <p>A text adventure about finding your way through a place that remembers everything.</p><a
+            href="game/README.md" class="text-link">View project <span>↗</span></a>
+        </div>
+      </article>
+
+      <article class="glass-card project-card project-secondary reveal" data-tilt>
+        <div class="card-top"><span class="number">02</span><span class="card-tag">Web build</span></div>
+        <div class="browser-art" aria-hidden="true">
+          <div class="browser-bar"><i></i><i></i><i></i></div>
+          <div class="browser-lines"><b></b><b></b><b></b><b></b></div>
+        </div>
+        <div class="card-content">
+          <p class="label">HTML / CSS / JS</p>
+          <h2>This is me</h2>
+          <p>A first-person web experiment, built from a blank page.</p><a href="assignments/01-this-is-me/index.html"
+            class="text-link">View project <span>↗</span></a>
+        </div>
+      </article>
+
+      <article class="glass-card about-card reveal" id="about">
+        <div class="card-top"><span class="number">03</span><span class="label">A little context</span></div>
+        <h2>More than<br><span>just code.</span></h2>
+        <p>I like the moment when a rough idea turns into something you can click, play, and share with someone else.
+        </p>
+        <div class="tool-row"><span>curiosity</span><span>story</span><span>systems</span></div>
+      </article>
+
+      <article class="glass-card now-card reveal">
+        <div class="card-top"><span class="number">04</span><span class="card-tag live"><i></i> Live now</span></div>
+        <p class="label">Learning log</p>
+        <h2>Building the<br>next level<span class="accent-mark">.</span></h2>
+        <div class="progress-item">
+          <div><span>JavaScript</span><b>72%</b></div><span class="progress-track"><i style="width: 72%"></i></span>
+        </div>
+        <div class="progress-item">
+          <div><span>Game systems</span><b>58%</b></div><span class="progress-track"><i style="width: 58%"></i></span>
+        </div>
+      </article>
     </section>
 
-    <section>
-      <h2>Get in touch</h2>
-      <!--
-        Put an email you will still control after graduation. If you only have the school one
-        today, that is fine — put it in, and change it later. That is what commits are for.
-      -->
-      <p><a href="mailto:you@example.com">you@example.com</a></p>
+    <section id="contact" class="contact-strip glass-card reveal">
+      <div>
+        <p class="eyebrow"><span class="eyebrow-dot"></span> Have an idea?</p>
+        <h2>Let’s make it<br><em>real.</em></h2>
+      </div>
+      <div class="contact-action">
+        <p>Currently based in Alabama.<br>Usually thinking about what to build next.</p><a class="button button-light"
+          href="mailto:you@example.com">Say hello <span aria-hidden="true">↗</span></a>
+      </div>
     </section>
-
   </main>
 
-  <footer>
-    <p>Built by hand. Last updated <!-- change this when you change the page --> August 2026.</p>
-  </footer>
+  <footer class="site-footer shell"><span>© 2026 Sullivan Cliburn</span><span class="footer-clock">Local time <strong
+        id="clock">--:--</strong></span><span>Built by hand <span class="heart">✦</span></span></footer>
 
+  <script src="app.js"></script>
 </body>
 
 </html>
