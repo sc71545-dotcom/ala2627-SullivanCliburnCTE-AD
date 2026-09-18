@@ -22,12 +22,21 @@
     </header>
     <section class="game-card" aria-label="Tank game">
       <div class="arena" id="arena">
-        <div class="hud"><span id="status">Target acquired</span><span>Armor 100%</span></div>
+        <div class="hud"><span id="status">Target acquired</span><span>Armor <strong id="armor">5</strong>/5</span>
+        </div>
         <div class="target" id="target" role="img" aria-label="Target">
           <span class="target-ring ring-one"></span><span class="target-ring ring-two"></span>
           <span class="target-core"></span><span class="target-label">TARGET</span>
         </div>
         <div class="tank" id="tank" aria-label="Your tank">
+          <div class="turret">
+            <div class="barrel"></div>
+          </div>
+          <div class="tank-body"><span></span><span></span></div>
+          <div class="track track-left"></div>
+          <div class="track track-right"></div>
+        </div>
+        <div class="tank enemy-tank" id="enemyTank" aria-label="Enemy tank">
           <div class="turret">
             <div class="barrel"></div>
           </div>

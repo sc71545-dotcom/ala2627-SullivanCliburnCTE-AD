@@ -184,6 +184,31 @@ h1 {
   transition: left .16s linear, top .16s linear;
 }
 
+.enemy-tank {
+  z-index: 3;
+  left: 76%;
+  top: 28%;
+  transform: translate(-50%, -50%) scale(.9) rotate(180deg);
+  pointer-events: none;
+}
+
+.enemy-tank .tank-body {
+  background: var(--orange);
+}
+
+.enemy-tank .turret {
+  background: #bb5435;
+}
+
+.tank.hit {
+  animation: hit .35s ease;
+}
+
+.tank.disabled {
+  filter: grayscale(1);
+  opacity: .45;
+}
+
 .tank-body {
   position: absolute;
   z-index: 2;
@@ -366,6 +391,11 @@ h1 {
   background: #ffe6a0;
   box-shadow: 0 0 12px 4px #f06d3b;
   pointer-events: none;
+}
+
+.enemy-shell {
+  background: #f7f0cb;
+  box-shadow: 0 0 12px 4px #d7442f;
 }
 
 @media (max-width: 600px) {
