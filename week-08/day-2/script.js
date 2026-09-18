@@ -1,14 +1,13 @@
 const arena = document.querySelector('#arena');
 const tank = document.querySelector('#tank');
 const enemyTank = document.querySelector('#enemyTank');
-const target = document.querySelector('#target');
 const shootButton = document.querySelector('#shoot');
 const resetButton = document.querySelector('#reset');
 const statusText = document.querySelector('#status');
 const hitsText = document.querySelector('#hits');
 const shotsText = document.querySelector('#shots');
 const armorText = document.querySelector('#armor');
-const game = { x: 25, y: 72, aim: -90, enemyX: 76, enemyY: 28, hits: 0, shots: 0, armorHits: 0, locked: false, enemyDisabled: false, playerDisabled: false };
+const game = { x: 25, y: 72, aim: -90, enemyX: 76, enemyY: 28, enemyAim: 90, hits: 0, shots: 0, armorHits: 0, locked: false, enemyDisabled: false, playerDisabled: false };
 
 function renderTank() {
   tank.style.left = `${game.x}%`;
@@ -18,6 +17,7 @@ function renderTank() {
 function renderEnemy() {
   enemyTank.style.left = `${game.enemyX}%`;
   enemyTank.style.top = `${game.enemyY}%`;
+  enemyTank.style.setProperty('--barrel-angle', `${game.enemyAim}deg`);
 }
 function moveTank(direction) {
   const step = 4;
@@ -40,7 +40,6 @@ function moveEnemy() {
   renderEnemy();
   statusText.textContent = 'Enemy tank repositioned';
 }
-function moveTarget() { target.style.left = `${58 + Math.random() * 30}%`; target.style.top = `${22 + Math.random() * 55}%`; }
 function shoot() {
   if (game.locked || game.enemyDisabled || game.playerDisabled) return;
   game.locked = true; game.shots += 1; shotsText.textContent = game.shots;
@@ -80,14 +79,24 @@ function enemyShoot() {
   const enemyBox = enemyTank.getBoundingClientRect();
   const tankBox = tank.getBoundingClientRect();
   const arenaBox = arena.getBoundingClientRect();
+  const enemyCenter = { x: enemyBox.left + enemyBox.width / 2, y: enemyBox.top + enemyBox.height / 2 };
+  const tankCenter = { x: tankBox.left + tankBox.width / 2, y: tankBox.top + tankBox.height / 2 };
+  const targetAngle = Math.atan2(tankCenter.y - enemyCenter.y, tankCenter.x - enemyCenter.x) * 180 / Math.PI;
+  const angleDifference = Math.abs(((targetAngle - game.enemyAim + 540) % 360) - 180);
+  if (angleDifference > 12) {
+    game.enemyAim = targetAngle;
+    renderEnemy();
+    statusText.textContent = 'Enemy is aiming...';
+    return;
+  }
   const bullet = document.createElement('span'); bullet.className = 'shell enemy-shell';
-  bullet.style.left = `${enemyBox.left - arenaBox.left + enemyBox.width / 2}px`;
-  bullet.style.top = `${enemyBox.top - arenaBox.top + enemyBox.height / 2}px`;
+  bullet.style.left = `${enemyCenter.x - arenaBox.left}px`;
+  bullet.style.top = `${enemyCenter.y - arenaBox.top}px`;
   arena.appendChild(bullet); statusText.textContent = 'Incoming enemy fire!';
   requestAnimationFrame(() => {
     bullet.style.transition = 'left .45s linear, top .45s linear';
-    bullet.style.left = `${tankBox.left - arenaBox.left + tankBox.width / 2}px`;
-    bullet.style.top = `${tankBox.top - arenaBox.top + tankBox.height / 2}px`;
+    bullet.style.left = `${tankCenter.x - arenaBox.left}px`;
+    bullet.style.top = `${tankCenter.y - arenaBox.top}px`;
   });
   setTimeout(() => {
     bullet.remove();
@@ -103,9 +112,9 @@ function enemyShoot() {
   }, 500);
 }
 function resetGame() {
-  game.x = 25; game.y = 72; game.aim = -90; game.enemyX = 76; game.enemyY = 28; game.hits = 0; game.shots = 0; game.armorHits = 0; game.locked = false; game.enemyDisabled = false; game.playerDisabled = false;
-  hitsText.textContent = '0'; shotsText.textContent = '0'; statusText.textContent = 'Target acquired';
-  armorText.textContent = '5'; tank.classList.remove('disabled', 'hit'); enemyTank.classList.remove('disabled', 'hit'); renderTank(); renderEnemy(); moveTarget();
+  game.x = 25; game.y = 72; game.aim = -90; game.enemyX = 76; game.enemyY = 28; game.enemyAim = 90; game.hits = 0; game.shots = 0; game.armorHits = 0; game.locked = false; game.enemyDisabled = false; game.playerDisabled = false;
+  hitsText.textContent = '0'; shotsText.textContent = '0'; statusText.textContent = 'Enemy tank in range';
+  armorText.textContent = '5'; tank.classList.remove('disabled', 'hit'); enemyTank.classList.remove('disabled', 'hit'); renderTank(); renderEnemy();
 }
 document.querySelectorAll('[data-move]').forEach(button => button.addEventListener('click', () => moveTank(button.dataset.move)));
 document.addEventListener('keydown', event => {

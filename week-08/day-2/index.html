@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tank Target Range</title>
+  <title>Tank Battle</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -13,7 +13,7 @@
     <header class="topbar">
       <div>
         <p class="eyebrow">Training Range // Sector 07</p>
-        <h1>Tank Target Range</h1>
+        <h1>Tank Battle</h1>
       </div>
       <div class="scoreboard" aria-label="Game status">
         <span>Hits <strong id="hits">0</strong></span>
@@ -22,11 +22,7 @@
     </header>
     <section class="game-card" aria-label="Tank game">
       <div class="arena" id="arena">
-        <div class="hud"><span id="status">Target acquired</span><span>Armor <strong id="armor">5</strong>/5</span>
-        </div>
-        <div class="target" id="target" role="img" aria-label="Target">
-          <span class="target-ring ring-one"></span><span class="target-ring ring-two"></span>
-          <span class="target-core"></span><span class="target-label">TARGET</span>
+        <div class="hud"><span id="status">Enemy tank in range</span><span>Armor <strong id="armor">5</strong>/5</span>
         </div>
         <div class="tank" id="tank" aria-label="Your tank">
           <div class="turret">

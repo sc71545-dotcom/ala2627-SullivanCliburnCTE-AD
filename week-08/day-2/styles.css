@@ -116,56 +116,9 @@ h1 {
   text-shadow: 1px 1px #273329;
 }
 
-.target,
 .tank {
   position: absolute;
   transform: translate(-50%, -50%);
-}
-
-.target {
-  z-index: 2;
-  width: 120px;
-  height: 120px;
-  left: 76%;
-  top: 37%;
-  border: 4px solid #eeebd7;
-  border-radius: 50%;
-  background: #b44931;
-  box-shadow: 0 0 0 8px rgba(16, 22, 25, .4), 0 12px 15px rgba(0, 0, 0, .22);
-  transition: left .4s ease, top .4s ease, transform .15s;
-}
-
-.target-ring {
-  position: absolute;
-  border: 2px solid #e9dfc3;
-  border-radius: 50%;
-  inset: 14px;
-}
-
-.ring-two {
-  inset: 30px;
-  border-color: #b44931;
-  background: #e9dfc3;
-}
-
-.target-core {
-  position: absolute;
-  inset: 43px;
-  border-radius: 50%;
-  background: #b44931;
-}
-
-.target-label {
-  position: absolute;
-  top: 128px;
-  width: 100%;
-  color: #26332b;
-  font: 700 11px 'Space Mono', monospace;
-  text-align: center;
-}
-
-.target.hit {
-  animation: hit .35s ease;
 }
 
 @keyframes hit {
@@ -188,7 +141,7 @@ h1 {
   z-index: 3;
   left: 76%;
   top: 28%;
-  transform: translate(-50%, -50%) scale(.9) rotate(180deg);
+  transform: translate(-50%, -50%) scale(.9);
   pointer-events: none;
 }
 
