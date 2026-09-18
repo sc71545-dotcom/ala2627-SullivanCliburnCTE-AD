@@ -8,9 +8,17 @@ const statusText = document.querySelector('#status');
 const hitsText = document.querySelector('#hits');
 const shotsText = document.querySelector('#shots');
 const armorText = document.querySelector('#armor');
-const game = { x: 25, y: 72, hits: 0, shots: 0, armorHits: 0, locked: false, enemyDisabled: false, playerDisabled: false };
+const game = { x: 25, y: 72, aim: -90, enemyX: 76, enemyY: 28, hits: 0, shots: 0, armorHits: 0, locked: false, enemyDisabled: false, playerDisabled: false };
 
-function renderTank() { tank.style.left = `${game.x}%`; tank.style.top = `${game.y}%`; }
+function renderTank() {
+  tank.style.left = `${game.x}%`;
+  tank.style.top = `${game.y}%`;
+  tank.style.setProperty('--barrel-angle', `${game.aim}deg`);
+}
+function renderEnemy() {
+  enemyTank.style.left = `${game.enemyX}%`;
+  enemyTank.style.top = `${game.enemyY}%`;
+}
 function moveTank(direction) {
   const step = 4;
   if (direction === 'up') game.y = Math.max(15, game.y - step);
@@ -19,6 +27,19 @@ function moveTank(direction) {
   if (direction === 'right') game.x = Math.min(92, game.x + step);
   renderTank();
 }
+function aimTank(direction) {
+  const angles = { up: -90, down: 90, left: 180, right: 0 };
+  game.aim = angles[direction];
+  renderTank();
+  statusText.textContent = `Barrel aimed ${direction}`;
+}
+function moveEnemy() {
+  if (game.enemyDisabled) return;
+  game.enemyX = 55 + Math.random() * 35;
+  game.enemyY = 18 + Math.random() * 62;
+  renderEnemy();
+  statusText.textContent = 'Enemy tank repositioned';
+}
 function moveTarget() { target.style.left = `${58 + Math.random() * 30}%`; target.style.top = `${22 + Math.random() * 55}%`; }
 function shoot() {
   if (game.locked || game.enemyDisabled || game.playerDisabled) return;
@@ -26,15 +47,19 @@ function shoot() {
   const tankBox = tank.getBoundingClientRect();
   const targetBox = enemyTank.getBoundingClientRect();
   const arenaBox = arena.getBoundingClientRect();
+  const tankCenter = { x: tankBox.left + tankBox.width / 2, y: tankBox.top + tankBox.height / 2 };
+  const targetCenter = { x: targetBox.left + targetBox.width / 2, y: targetBox.top + targetBox.height / 2 };
+  const targetAngle = Math.atan2(targetCenter.y - tankCenter.y, targetCenter.x - tankCenter.x) * 180 / Math.PI;
+  const angleDifference = Math.abs(((targetAngle - game.aim + 540) % 360) - 180);
   const bullet = document.createElement('span'); bullet.className = 'shell';
-  bullet.style.left = `${tankBox.left - arenaBox.left + tankBox.width / 2}px`;
-  bullet.style.top = `${tankBox.top - arenaBox.top + tankBox.height / 2}px`;
+  bullet.style.left = `${tankCenter.x - arenaBox.left}px`;
+  bullet.style.top = `${tankCenter.y - arenaBox.top}px`;
   arena.appendChild(bullet); statusText.textContent = 'Firing...';
-  const hit = Math.abs((tankBox.left + tankBox.width / 2) - (targetBox.left + targetBox.width / 2)) < 90 && tankBox.top < targetBox.bottom;
+  const hit = angleDifference <= 18;
   requestAnimationFrame(() => {
     bullet.style.transition = 'left .45s linear, top .45s linear';
-    bullet.style.left = `${targetBox.left - arenaBox.left + targetBox.width / 2}px`;
-    bullet.style.top = `${targetBox.top - arenaBox.top + targetBox.height / 2}px`;
+    bullet.style.left = `${targetCenter.x - arenaBox.left}px`;
+    bullet.style.top = `${targetCenter.y - arenaBox.top}px`;
   });
   setTimeout(() => {
     bullet.remove();
@@ -78,17 +103,21 @@ function enemyShoot() {
   }, 500);
 }
 function resetGame() {
-  game.x = 25; game.y = 72; game.hits = 0; game.shots = 0; game.armorHits = 0; game.locked = false; game.enemyDisabled = false; game.playerDisabled = false;
+  game.x = 25; game.y = 72; game.aim = -90; game.enemyX = 76; game.enemyY = 28; game.hits = 0; game.shots = 0; game.armorHits = 0; game.locked = false; game.enemyDisabled = false; game.playerDisabled = false;
   hitsText.textContent = '0'; shotsText.textContent = '0'; statusText.textContent = 'Target acquired';
-  armorText.textContent = '5'; tank.classList.remove('disabled', 'hit'); enemyTank.classList.remove('disabled', 'hit'); renderTank(); moveTarget();
+  armorText.textContent = '5'; tank.classList.remove('disabled', 'hit'); enemyTank.classList.remove('disabled', 'hit'); renderTank(); renderEnemy(); moveTarget();
 }
 document.querySelectorAll('[data-move]').forEach(button => button.addEventListener('click', () => moveTank(button.dataset.move)));
 document.addEventListener('keydown', event => {
-  const keys = { ArrowUp: 'up', w: 'up', ArrowDown: 'down', s: 'down', ArrowLeft: 'left', a: 'left', ArrowRight: 'right', d: 'right' };
-  if (keys[event.key]) { event.preventDefault(); moveTank(keys[event.key]); }
+  const moveKeys = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right' };
+  const aimKeys = { w: 'up', s: 'down', a: 'left', d: 'right' };
+  if (moveKeys[event.key]) { event.preventDefault(); moveTank(moveKeys[event.key]); }
+  if (aimKeys[event.key.toLowerCase()]) { event.preventDefault(); aimTank(aimKeys[event.key.toLowerCase()]); }
   if (event.key === ' ' || event.key === 'Enter') shoot();
 });
 shootButton.addEventListener('click', shoot);
 resetButton.addEventListener('click', resetGame);
 setInterval(enemyShoot, 15000);
+setInterval(moveEnemy, 5000);
 renderTank();
+renderEnemy();
