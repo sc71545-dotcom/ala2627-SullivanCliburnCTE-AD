@@ -20,7 +20,7 @@ function renderEnemy() {
   enemyTank.style.setProperty('--barrel-angle', `${game.enemyAim}deg`);
 }
 function moveTank(direction) {
-  const step = 4;
+  const step = 8;
   if (direction === 'up') game.y = Math.max(15, game.y - step);
   if (direction === 'down') game.y = Math.min(88, game.y + step);
   if (direction === 'left') game.x = Math.max(8, game.x - step);
@@ -35,8 +35,8 @@ function aimTank(direction) {
 }
 function moveEnemy() {
   if (game.enemyDisabled) return;
-  game.enemyX = 55 + Math.random() * 35;
-  game.enemyY = 18 + Math.random() * 62;
+  game.enemyX = 15 + Math.random() * 75;
+  game.enemyY = 15 + Math.random() * 70;
   renderEnemy();
   statusText.textContent = 'Enemy tank repositioned';
 }
@@ -126,7 +126,7 @@ document.addEventListener('keydown', event => {
 });
 shootButton.addEventListener('click', shoot);
 resetButton.addEventListener('click', resetGame);
-setInterval(enemyShoot, 15000);
+setInterval(enemyShoot, 5000);
 setInterval(moveEnemy, 5000);
 renderTank();
 renderEnemy();
