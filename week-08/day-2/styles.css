@@ -134,7 +134,8 @@ h1 {
   top: 72%;
   width: 100px;
   height: 86px;
-  transition: left .16s linear, top .16s linear;
+  transition: left .1s linear, top .1s linear;
+  will-change: left, top;
 }
 
 .enemy-tank {
@@ -142,6 +143,7 @@ h1 {
   left: 76%;
   top: 28%;
   transform: translate(-50%, -50%) scale(.9);
+  transition: left .25s ease-out, top .25s ease-out;
   pointer-events: none;
 }
 
