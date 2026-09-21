@@ -7,12 +7,13 @@ const statusText = document.querySelector('#status');
 const hitsText = document.querySelector('#hits');
 const shotsText = document.querySelector('#shots');
 const armorText = document.querySelector('#armor');
-const game = { x: 25, y: 72, aim: -90, enemyX: 76, enemyY: 28, enemyAim: 90, hits: 0, shots: 0, armorHits: 0, locked: false, enemyDisabled: false, playerDisabled: false };
+const game = { x: 25, y: 72, tankAngle: 0, aim: 0, enemyX: 76, enemyY: 28, enemyAim: 90, hits: 0, shots: 0, armorHits: 0, locked: false, enemyDisabled: false, playerDisabled: false };
 
 function renderTank() {
   tank.style.left = `${game.x}%`;
   tank.style.top = `${game.y}%`;
-  tank.style.setProperty('--barrel-angle', `${game.aim}deg`);
+  tank.style.setProperty('--tank-angle', `${game.tankAngle}deg`);
+  tank.style.setProperty('--barrel-angle', `${game.aim - game.tankAngle}deg`);
 }
 function renderEnemy() {
   enemyTank.style.left = `${game.enemyX}%`;
@@ -20,18 +21,28 @@ function renderEnemy() {
   enemyTank.style.setProperty('--barrel-angle', `${game.enemyAim}deg`);
 }
 function moveTank(direction) {
-  const step = 10;
-  if (direction === 'up') game.y = Math.max(10, game.y - step);
-  if (direction === 'down') game.y = Math.min(90, game.y + step);
-  if (direction === 'left') game.x = Math.max(6, game.x - step);
-  if (direction === 'right') game.x = Math.min(94, game.x + step);
+  const moveStep = 5;
+  const turnStep = 15;
+  const radians = game.tankAngle * Math.PI / 180;
+  if (direction === 'forward' || direction === 'backward') {
+    const distance = direction === 'forward' ? moveStep : -moveStep;
+    game.x = Math.max(6, Math.min(94, game.x + Math.cos(radians) * distance));
+    game.y = Math.max(10, Math.min(90, game.y + Math.sin(radians) * distance));
+  }
+  if (direction === 'turn-left') game.tankAngle -= turnStep;
+  if (direction === 'turn-right') game.tankAngle += turnStep;
   renderTank();
 }
-function aimTank(direction) {
-  const angles = { up: -90, down: 90, left: 180, right: 0 };
-  game.aim = angles[direction];
+function aimTank(event) {
+  const arenaBox = arena.getBoundingClientRect();
+  const tankBox = tank.getBoundingClientRect();
+  const tankCenter = {
+    x: tankBox.left + tankBox.width / 2,
+    y: tankBox.top + tankBox.height / 2
+  };
+  game.aim = Math.atan2(event.clientY - tankCenter.y, event.clientX - tankCenter.x) * 180 / Math.PI;
   renderTank();
-  statusText.textContent = `Barrel aimed ${direction}`;
+  statusText.textContent = `Barrel aimed at ${Math.round(event.clientX - arenaBox.left)}, ${Math.round(event.clientY - arenaBox.top)}`;
 }
 function moveEnemy() {
   if (game.enemyDisabled) return;
@@ -112,16 +123,15 @@ function enemyShoot() {
   }, 500);
 }
 function resetGame() {
-  game.x = 25; game.y = 72; game.aim = -90; game.enemyX = 76; game.enemyY = 28; game.enemyAim = 90; game.hits = 0; game.shots = 0; game.armorHits = 0; game.locked = false; game.enemyDisabled = false; game.playerDisabled = false;
+  game.x = 25; game.y = 72; game.tankAngle = 0; game.aim = 0; game.enemyX = 76; game.enemyY = 28; game.enemyAim = 90; game.hits = 0; game.shots = 0; game.armorHits = 0; game.locked = false; game.enemyDisabled = false; game.playerDisabled = false;
   hitsText.textContent = '0'; shotsText.textContent = '0'; statusText.textContent = 'Enemy tank in range';
   armorText.textContent = '5'; tank.classList.remove('disabled', 'hit'); enemyTank.classList.remove('disabled', 'hit'); renderTank(); renderEnemy();
 }
 document.querySelectorAll('[data-move]').forEach(button => button.addEventListener('click', () => moveTank(button.dataset.move)));
+arena.addEventListener('mousemove', aimTank);
 document.addEventListener('keydown', event => {
-  const moveKeys = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right' };
-  const aimKeys = { w: 'up', s: 'down', a: 'left', d: 'right' };
-  if (moveKeys[event.key]) { event.preventDefault(); moveTank(moveKeys[event.key]); }
-  if (aimKeys[event.key.toLowerCase()]) { event.preventDefault(); aimTank(aimKeys[event.key.toLowerCase()]); }
+  const moveKeys = { w: 'forward', s: 'backward', a: 'turn-left', d: 'turn-right' };
+  if (moveKeys[event.key.toLowerCase()]) { event.preventDefault(); moveTank(moveKeys[event.key.toLowerCase()]); }
   if (event.key === ' ' || event.key === 'Enter') shoot();
 });
 shootButton.addEventListener('click', shoot);

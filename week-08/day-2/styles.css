@@ -118,12 +118,12 @@ h1 {
 
 .tank {
   position: absolute;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) rotate(var(--tank-angle, 0deg));
 }
 
 @keyframes hit {
   50% {
-    transform: translate(-50%, -50%) scale(1.18);
+    transform: translate(-50%, -50%) rotate(var(--tank-angle, 0deg)) scale(1.18);
     filter: brightness(1.7);
   }
 }
